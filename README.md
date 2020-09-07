@@ -221,9 +221,11 @@ cp *.ign /var/www/html/
 2. Boot via LAN for executing PXE Boot installation
 3. In a few second display will showing PXE Boot installer UI
 4. Run 1 Bootstrap and 3 Masters simultaneously.
+.
 ![bootstrap](https://raw.githubusercontent.com/pieterdauds/openshift4x-proxy/master/images/bootstrap.png)
-
+.
 ![master](https://raw.githubusercontent.com/pieterdauds/openshift4x-proxy/master/images/master.png)
+.
 5. For monitoring Bootstrap status you can use this command (run from Helper VM in /root/installer/devocp/ dir)
 ```
 openshift-install wait-for bootstrap-complete --log-level debug
