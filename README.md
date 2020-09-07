@@ -20,7 +20,7 @@
 			       RAM	=> 4 GB
 			       HDD	=> 150 GB
              IP   => 192.168.1.10
-> **Note :** (1) For VMWare VMs set Latency Sensitivity to High (Edit Settings => VM Options => Latency Sensitivity (2) Master Must 3VMs
+> **Note :** (1) Set Latency Sensitivity to High (Edit Settings => VM Options => Latency Sensitivity (2) Master Must 3VMs
 
 
 Create installation directory
