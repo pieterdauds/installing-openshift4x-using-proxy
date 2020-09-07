@@ -1,0 +1,27 @@
+apiVersion: v1
+baseDomain: example.com
+proxy:
+  httpsProxy: http://192.168.1.5:8080
+  httpProxy: http://192.168.1.5:8080
+  noProxy: .example.com,.ocpdev.example.com,192.168.1.0/24,api-int.ocpdev.example.com,api.ocpdev.example.com,registry.ocpdev.example.com
+compute:
+- hyperthreading: Enabled
+  name: worker
+  replicas: 0
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  replicas: 1
+metadata:
+  name: ocpdev
+networking:
+  clusterNetworks:
+  - cidr: 10.254.0.0/16
+    hostPrefix: 24
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  none: {}
+pullSecret: '{"auths": ...}' <<- INSERT YOUR Pull Secret from cloud.redhat.com
+sshKey: 'ssh-ed25519 AAAA...' <<-- insert ssh Pub

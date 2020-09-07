@@ -1,0 +1,25 @@
+$TTL 1h
+$ORIGIN 81.58.10.IN-ADDR.ARPA.
+
+@   1h  IN SOA  helper.ocpdev.example.com.  root.example.com. (
+            2019052901  ; serial
+            2H          ; refresh
+            15          ; retry
+            1W          ; expiry
+            2H )        ; minimum
+
+            IN NS       helper.ocpdev.example.com.
+
+10      IN PTR  helper.ocpdev.example.com.
+22      IN PTR  bootstrap.ocpdev.example.com.
+11      IN PTR  master-0.ocpdev.example.com.
+12      IN PTR  master-1.ocpdev.example.com.
+13      IN PTR  master-2.ocpdev.example.com.
+14      IN PTR  router-0.ocpdev.example.com.
+15      IN PTR  router-1.ocpdev.example.com.
+16      IN PTR  router-2.ocpdev.example.com.
+17      IN PTR  worker-0.ocpdev.example.com.
+18      IN PTR  worker-1.ocpdev.example.com.
+19      IN PTR  worker-2.ocpdev.example.com.
+20      IN PTR  logs-0.ocpdev.example.com.
+21      IN PTR  logs-1.ocpdev.example.com.
