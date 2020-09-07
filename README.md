@@ -1,4 +1,4 @@
-# installing OpenShift4.3.33 Using Proxy
+# Installing OpenShift4.3.33(Baremetal Install) Using Proxy in VMWWare Env
 ## Preparing Installation
 *Hardware/VM Minimum Req Spec
 - Bootstrap	:  vCPU => 4
@@ -196,7 +196,7 @@ platform:
 pullSecret: '{"auths": ...}' <<- INSERT YOUR Pull Secret from cloud.redhat.com
 sshKey: 'ssh-ed25519 AAAA...' <<-- insert ssh Pub
 ```
-> **Note:** Replace the `pullSecret` and `sshKey` with your own.
+> **Note:** Replace the `pullSecret`, `sshKey` and `proxy` with your own. | in this case noProxy is mandatory and must be filled! 
 
 Create OpenShift Manifests 
 ```
@@ -219,6 +219,101 @@ cp *.ign /var/www/html/
 ## Install The Cluster
 1. Run `Bootstrap` & `Master` VMs
 2. Boot via LAN for executing PXE Boot installation
-3. In a few second display showing PXE Boot installer
-![bootstrap](https://raw.githubusercontent.com/pieterdauds/openshift4x-proxy/master/bootstrap.png)
+3. In a few second display will showing PXE Boot installer UI
 4. Run 1 Bootstrap and 3 Masters simultaneously.
+![bootstrap](https://raw.githubusercontent.com/pieterdauds/openshift4x-proxy/master/images/bootstrap.png)
+![master](https://raw.githubusercontent.com/pieterdauds/openshift4x-proxy/master/images/master.png)
+5. For monitoring Bootstrap status you can use this command (run from Helper VM in /root/installer/devocp/ dir)
+```
+openshift-install wait-for bootstrap-complete --log-level debug
+```
+> **Note:** For verbose monitoring Bootstrap logs you can remote the Bootstrap node using this command `ssh core@bootstrap.ocpdev.example.com` and run `journalctl` command.
+wait until show logs like this :
+```
+DEBUG OpenShift Installer v4.2.1
+DEBUG Built from commit e349157f325dba2d06666987603da39965be5319
+INFO Waiting up to 30m0s for the Kubernetes API at https://api.ocpdev.example.com:6443...
+INFO API v1.14.6+868bc38 up
+INFO Waiting up to 30m0s for bootstrapping to complete...
+DEBUG Bootstrap status: complete
+INFO It is now safe to remove the bootstrap resources
+```
+6. After showing log "INFO It is now safe to remove the bootstrap resources" poweroff the bootstrap VM and check your own cluster
+```
+export KUBECONFIG=/root/installer/ocpdev/auth/kubeconfig
+oc get nodes
+```
+```
+NAME                       STATUS   ROLES     AGE    VERSION
+master-0.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
+master-1.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
+master-2.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
+```
+7. Check Operator Cluster Status
+```
+oc get co
+```
+```
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE
+authentication                             4.3.33     True        False         True       
+cloud-credential                           4.3.33     True        False         False     
+cluster-autoscaler                         4.3.33     True        False         False     
+console                                    4.3.33     True        False         True       
+dns                                        4.3.33     False       True          True      
+image-registry                             4.3.33     False       True          False     
+ingress                                    4.3.33     False       True          False     
+insights                                   4.3.33     True        False         True      
+kube-apiserver                             4.3.33     True        True          True       
+kube-controller-manager                    4.3.33     True        False         True       
+kube-scheduler                             4.3.33     True        False         True       
+machine-api                                4.3.33     True        False         False     
+machine-config                             4.3.33     False       False         True       
+marketplace                                4.3.33     True        False         False     
+monitoring                                 4.3.33     False       True          True       
+network                                    4.3.33     True        True          False     
+node-tuning                                4.3.33     False       False         True       
+openshift-apiserver                        4.3.33     False       False         False     
+openshift-controller-manager               4.3.33     False       False         False     
+openshift-samples                          4.3.33     True        False         False     
+operator-lifecycle-manager                 4.3.33     True        False         False     
+operator-lifecycle-manager-catalog         4.3.33     True        False         False     
+operator-lifecycle-manager-packageserver   4.3.33     False       True          False     
+service-ca                                 4.3.33     True        True          False     
+service-catalog-apiserver                  4.3.33     True        False         False     
+service-catalog-controller-manager         4.3.33     True        False         False     
+storage                                    4.3.33     True        False         False
+```
+in this case the Openshift Cluster Operator is in install process, you can check installation status using this command
+```
+openshift-install wait-for install-complete
+```
+8. Add worker server to cluster
+Run worker VMs and boot via PXE Boot again, and select `worker` in UI menu.
+![worker](https://raw.githubusercontent.com/pieterdauds/openshift4x-proxy/master/images/worker.png)
+9. By default OpenShift cluster cant approve worker CSR automaticly, you must approve certificate manually using this command
+Show all CSR certificate
+```
+oc get csr
+```
+Approve selected CSR certificate
+```
+oc adm certificate approve `CSRNAME`
+```
+OR you can approve all CSR certificate uisng this command
+```
+oc get csr --no-headers | awk '{print $1}' | xargs oc adm certificate approve
+```
+10. Check cluster nodes
+Make sure the `worker` nodes successfully join to the OpenShift4.3.33 cluster.
+```
+oc get nodes
+```
+```
+NAME                       STATUS   ROLES     AGE    VERSION
+master-0.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
+master-1.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
+master-2.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
+worker-0.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
+worker-1.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
+worker-2.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
+```
