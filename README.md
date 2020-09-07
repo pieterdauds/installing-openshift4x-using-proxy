@@ -228,6 +228,7 @@ cp *.ign /var/www/html/
 openshift-install wait-for bootstrap-complete --log-level debug
 ```
 > **Note:** For verbose monitoring Bootstrap logs you can remote the Bootstrap node using this command `ssh core@bootstrap.ocpdev.example.com` and run `journalctl` command.
+
 wait until show logs like this :
 ```
 DEBUG OpenShift Installer v4.2.1
@@ -238,7 +239,11 @@ INFO Waiting up to 30m0s for bootstrapping to complete...
 DEBUG Bootstrap status: complete
 INFO It is now safe to remove the bootstrap resources
 ```
-6. After showing log "INFO It is now safe to remove the bootstrap resources" poweroff the bootstrap VM and check your own cluster
+6. Remove `Bootstrap` record from LB Settings
+```
+cp haproxy/haproxy.cfg.patch /etc/haproxy/haproxy.cfg
+```
+7. After showing log "INFO It is now safe to remove the bootstrap resources" poweroff the bootstrap VM and check your own cluster
 ```
 export KUBECONFIG=/root/installer/ocpdev/auth/kubeconfig
 oc get nodes
@@ -249,7 +254,7 @@ master-0.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
 master-1.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
 master-2.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
 ```
-7. Check Operator Cluster Status
+8. Check Operator Cluster Status
 ```
 oc get co
 ```
@@ -287,10 +292,10 @@ in this case the Openshift Cluster Operator is in install process, you can check
 ```
 openshift-install wait-for install-complete
 ```
-8. Add worker server to cluster
+9. Add worker server to cluster
 Run worker VMs and boot via PXE Boot again, and select `worker` in UI menu.
 ![worker](https://raw.githubusercontent.com/pieterdauds/openshift4x-proxy/master/images/worker.png)
-9. By default OpenShift cluster cant approve worker CSR automaticly, you must approve certificate manually using this command
+10. By default OpenShift cluster cant approve worker CSR automaticly, you must approve certificate manually using this command
 Show all CSR certificate
 ```
 oc get csr
