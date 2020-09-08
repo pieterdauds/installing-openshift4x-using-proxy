@@ -1,4 +1,4 @@
-# Installing OpenShift4.3.33(Baremetal Install) Using Proxy in VMWare Env
+# Installing OpenShift 4.3.33 (Baremetal Install) Using Proxy in VMWare Env
 ## Preparing Installation
 *Hardware/VM Minimum Req Spec
 - Bootstrap	:  vCPU => 4
