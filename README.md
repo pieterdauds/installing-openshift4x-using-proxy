@@ -56,7 +56,8 @@ Go to https://cloud.redhat.com
  
 OR
 
-You can Download using this command
+You can Download using this command.
+
 OpenShift Binaries
 ```
 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.3.33/openshift-client-linux-4.3.33.tar.gz
