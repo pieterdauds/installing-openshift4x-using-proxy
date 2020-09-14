@@ -312,7 +312,7 @@ OR you can approve all CSR certificate uisng this command
 ```
 oc get csr --no-headers | awk '{print $1}' | xargs oc adm certificate approve
 ```
-10. Check cluster nodes
+11. Check cluster nodes
 Make sure the `worker` nodes successfully join to the OpenShift4.3.33 cluster.
 ```
 oc get nodes
