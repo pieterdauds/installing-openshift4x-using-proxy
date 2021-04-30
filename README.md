@@ -229,6 +229,7 @@ cp *.ign /var/www/html/
 .
 5. For monitoring Bootstrap status you can use this command (run from Helper VM in /root/installer/devocp/ dir)
 ```
+no_proxy=api.ocpdev.example.com
 openshift-install wait-for bootstrap-complete --log-level debug
 ```
 > **Note:** For verbose monitoring Bootstrap logs you can remote the Bootstrap node using this command `ssh core@bootstrap.ocpdev.example.com` and run `journalctl` command.
