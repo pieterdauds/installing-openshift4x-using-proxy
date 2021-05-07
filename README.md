@@ -327,3 +327,18 @@ worker-0.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
 worker-1.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
 worker-2.ocpdev.example.com   Ready    master    3d6h   v1.16.2+554af56
 ```
+
+
+If the bootstrap error like this
+Failed to get system container stats for "/system.slice/kubelet.service": failed to get cgroup stats for "/system.slice/kubelet.service": failed to get container info for "/system.slice/kubelet.service": unknown container "/system.slice/kubelet.service
+run this commands :
+```
+sudo vim /etc/sysconfig/kubelet
+```
+add at the end of DAEMON_ARGS string:
+```
+ --runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice
+```
+```
+sudo systemctl restart kubelet
+```
